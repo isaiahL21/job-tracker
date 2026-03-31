@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Contacts — JobTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1 class="page-title"><span>Contacts</span></h1>
+    <a href="/contacts/add" class="btn btn-primary">+ Add Contact</a>
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th><th>Company</th><th>Title</th><th>Email</th><th>Phone</th><th>LinkedIn</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in contacts %}
+            <tr>
+                <td>{{ c.contact_name }}</td>
+                <td>{{ c.company_name }}</td>
+                <td>{{ c.title or '—' }}</td>
+                <td>{{ c.email or '—' }}</td>
+                <td>{{ c.phone or '—' }}</td>
+                <td>{% if c.linkedin_url %}<a href="{{ c.linkedin_url }}" target="_blank">View</a>{% else %}—{% endif %}</td>
+                <td style="display:flex;gap:8px;">
+                    <a href="/contacts/edit/{{ c.contact_id }}" class="btn btn-edit">Edit</a>
+                    <a href="/contacts/delete/{{ c.contact_id }}" class="btn btn-delete"
+                       onclick="return confirm('Delete this contact?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

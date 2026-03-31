@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Edit Contact — JobTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1 class="page-title"><span>Edit Contact</span></h1>
+</div>
+
+<div class="form-card">
+    <form method="POST">
+        <div class="form-group">
+            <label>Company *</label>
+            <select name="company_id" required>
+                {% for c in companies %}
+                <option value="{{ c.company_id }}" {% if c.company_id == contact.company_id %}selected{% endif %}>
+                    {{ c.company_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Contact Name *</label>
+            <input type="text" name="contact_name" value="{{ contact.contact_name }}" required>
+        </div>
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" value="{{ contact.title or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="{{ contact.email or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            <input type="text" name="phone" value="{{ contact.phone or '' }}">
+        </div>
+        <div class="form-group">
+            <label>LinkedIn URL</label>
+            <input type="text" name="linkedin_url" value="{{ contact.linkedin_url or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Notes</label>
+            <textarea name="notes">{{ contact.notes or '' }}</textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Update Contact</button>
+            <a href="/contacts" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

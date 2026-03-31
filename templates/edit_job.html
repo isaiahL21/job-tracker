@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Edit Job — JobTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1 class="page-title"><span>Edit Job</span></h1>
+</div>
+
+<div class="form-card">
+    <form method="POST">
+        <div class="form-group">
+            <label>Company *</label>
+            <select name="company_id" required>
+                {% for c in companies %}
+                <option value="{{ c.company_id }}" {% if c.company_id == job.company_id %}selected{% endif %}>
+                    {{ c.company_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Job Title *</label>
+            <input type="text" name="job_title" value="{{ job.job_title }}" required>
+        </div>
+        <div class="form-group">
+            <label>Job Type</label>
+            <select name="job_type">
+                {% for t in ['Full-time', 'Part-time', 'Contract', 'Internship'] %}
+                <option value="{{ t }}" {% if t == job.job_type %}selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Salary Min</label>
+            <input type="number" name="salary_min" value="{{ job.salary_min or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Salary Max</label>
+            <input type="number" name="salary_max" value="{{ job.salary_max or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Job URL</label>
+            <input type="text" name="job_url" value="{{ job.job_url or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Date Posted</label>
+            <input type="date" name="date_posted" value="{{ job.date_posted }}">
+        </div>
+        <div class="form-group">
+            <label>Requirements (comma separated)</label>
+            <input type="text" name="requirements" value="{{ job.requirements or '' }}">
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Update Job</button>
+            <a href="/jobs" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

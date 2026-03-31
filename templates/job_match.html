@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Job Match — JobTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1 class="page-title"><span>Job Match</span></h1>
+</div>
+
+<div class="search-card">
+    <form method="POST">
+        <label>Enter Your Skills (comma separated)</label>
+        <input type="text" name="skills" placeholder="e.g. Python, SQL, Flask" value="{{ user_skills }}">
+        <button type="submit" class="btn-submit">Find Matches</button>
+    </form>
+</div>
+
+{% if results %}
+    <div class="section-title">{{ results|length }} jobs ranked by match</div>
+    {% for r in results %}
+    <div class="match-card">
+        <div class="match-header">
+            <div>
+                <div class="match-title">{{ r.job_title }}</div>
+                <div class="match-company">{{ r.company_name }}</div>
+            </div>
+            <div class="match-percent {% if r.percent >= 75 %}pct-high{% elif r.percent >= 40 %}pct-mid{% else %}pct-low{% endif %}">
+                {{ r.percent }}%
+            </div>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" style="width:{{ r.percent }}%;
+                background: {% if r.percent >= 75 %}var(--accent2){% elif r.percent >= 40 %}var(--warning){% else %}var(--danger){% endif %}">
+            </div>
+        </div>
+        <div class="skill-rows">
+            <div>
+                <div class="skill-group-label">✅ Matched ({{ r.matched|length }}/{{ r.total }})</div>
+                {% for s in r.matched %}
+                <span class="skill-tag tag-matched">{{ s }}</span>
+                {% endfor %}
+                {% if not r.matched %}<span style="color:var(--muted);font-size:13px;">None</span>{% endif %}
+            </div>
+            <div>
+                <div class="skill-group-label">❌ Missing</div>
+                {% for s in r.missing %}
+                <span class="skill-tag tag-missing">{{ s }}</span>
+                {% endfor %}
+                {% if not r.missing %}<span style="color:var(--muted);font-size:13px;">None</span>{% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+{% elif request.method == 'POST' %}
+    <p class="empty-state">No jobs found. Make sure your jobs have requirements saved.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — JobTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1 class="page-title">Good to see you, <span>let's track.</span></h1>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ total_apps }}</div>
+        <div class="stat-label">Total Applications</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ total_companies }}</div>
+        <div class="stat-label">Companies Tracked</div>
+    </div>
+    {% for s in status_counts %}
+    <div class="stat-card">
+        <div class="stat-number">{{ s.count }}</div>
+        <div class="stat-label">{{ s.status }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="section-title">Application Status Breakdown</div>
+<div class="card" style="max-width: 420px; display: flex; flex-direction: column; align-items: center; padding: 32px;">
+    <canvas id="statusChart" width="320" height="320"></canvas>
+    <div id="chart-legend" style="margin-top: 24px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ status_counts | map(attribute='status') | list | tojson }};
+    const data   = {{ status_counts | map(attribute='count')  | list | tojson }};
+
+    const colorMap = {
+        'Applied':   '#00e5ff',
+        'Screening': '#ffb347',
+        'Interview': '#00ff9d',
+        'Offer':     '#c084fc',
+        'Rejected':  '#ff4d6d',
+        'Withdrawn': '#5a7490',
+    };
+
+    const colors = labels.map(l => colorMap[l] || '#5a7490');
+
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors.map(c => c + '33'),
+                borderColor: colors,
+                borderWidth: 2,
+                hoverBackgroundColor: colors.map(c => c + '66'),
+            }]
+        },
+        options: {
+            cutout: '70%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0e1627',
+                    borderColor: '#1e2d47',
+                    borderWidth: 1,
+                    titleColor: '#e8edf5',
+                    bodyColor: '#5a7490',
+                    padding: 12,
+                    callbacks: {
+                        label: ctx => ` ${ctx.parsed} application${ctx.parsed !== 1 ? 's' : ''}`
+                    }
+                }
+            },
+            animation: { animateRotate: true, duration: 900 }
+        }
+    });
+
+    // Custom legend
+    const legend = document.getElementById('chart-legend');
+    labels.forEach((label, i) => {
+        legend.innerHTML += `
+            <div style="display:flex;align-items:center;gap:7px;font-size:13px;color:#e8edf5;">
+                <span style="width:10px;height:10px;border-radius:50%;background:${colors[i]};display:inline-block;"></span>
+                ${label}: <strong>${data[i]}</strong>
+            </div>`;
+    });
+</script>
+
+{% endblock %}

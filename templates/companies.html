@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Companies — JobTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1 class="page-title"><span>Companies</span></h1>
+    <a href="/companies/add" class="btn btn-primary">+ Add Company</a>
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th><th>Industry</th><th>City</th><th>State</th><th>Website</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in companies %}
+            <tr>
+                <td>{{ c.company_name }}</td>
+                <td>{{ c.industry or '—' }}</td>
+                <td>{{ c.city or '—' }}</td>
+                <td>{{ c.state or '—' }}</td>
+                <td>{% if c.website %}<a href="{{ c.website }}" target="_blank">{{ c.website }}</a>{% else %}—{% endif %}</td>
+                <td style="display:flex;gap:8px;">
+                    <a href="/companies/edit/{{ c.company_id }}" class="btn btn-edit">Edit</a>
+                    <a href="/companies/delete/{{ c.company_id }}" class="btn btn-delete"
+                       onclick="return confirm('Delete this company?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

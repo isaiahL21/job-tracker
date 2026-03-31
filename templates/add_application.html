@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Add Application — JobTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1 class="page-title"><span>Add Application</span></h1>
+</div>
+
+<div class="form-card">
+    <form method="POST">
+        <div class="form-group">
+            <label>Job *</label>
+            <select name="job_id" required>
+                <option value="">— Select Job —</option>
+                {% for j in jobs %}
+                <option value="{{ j.job_id }}">{{ j.company_name }} — {{ j.job_title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Application Date *</label>
+            <input type="date" name="application_date" required>
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status">
+                <option>Applied</option>
+                <option>Screening</option>
+                <option>Interview</option>
+                <option>Offer</option>
+                <option>Rejected</option>
+                <option>Withdrawn</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Resume Version</label>
+            <input type="text" name="resume_version" placeholder="e.g. v1, v2">
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" name="cover_letter_sent" id="cls">
+            <label for="cls">Cover Letter Sent</label>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Save Application</button>
+            <a href="/applications" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Jobs — JobTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1 class="page-title"><span>Jobs</span></h1>
+    <a href="/jobs/add" class="btn btn-primary">+ Add Job</a>
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Job Title</th><th>Company</th><th>Type</th><th>Salary</th><th>Date Posted</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for j in jobs %}
+            <tr>
+                <td>{{ j.job_title }}</td>
+                <td>{{ j.company_name }}</td>
+                <td>{{ j.job_type or '—' }}</td>
+                <td>
+                    {% if j.salary_min and j.salary_max %}
+                        ${{ j.salary_min }} – ${{ j.salary_max }}
+                    {% else %}—{% endif %}
+                </td>
+                <td>{{ j.date_posted or '—' }}</td>
+                <td style="display:flex;gap:8px;">
+                    <a href="/jobs/edit/{{ j.job_id }}" class="btn btn-edit">Edit</a>
+                    <a href="/jobs/delete/{{ j.job_id }}" class="btn btn-delete"
+                       onclick="return confirm('Delete this job?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Applications — JobTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <h1 class="page-title"><span>Applications</span></h1>
+    <a href="/applications/add" class="btn btn-primary">+ Add Application</a>
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Job Title</th><th>Company</th><th>Date Applied</th><th>Status</th><th>Resume</th><th>Cover Letter</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in applications %}
+            <tr>
+                <td>{{ a.job_title }}</td>
+                <td>{{ a.company_name }}</td>
+                <td>{{ a.application_date }}</td>
+                <td><span class="badge badge-{{ a.status }}">{{ a.status }}</span></td>
+                <td>{{ a.resume_version or '—' }}</td>
+                <td>{{ 'Yes' if a.cover_letter_sent else 'No' }}</td>
+                <td style="display:flex;gap:8px;">
+                    <a href="/applications/edit/{{ a.application_id }}" class="btn btn-edit">Edit</a>
+                    <a href="/applications/delete/{{ a.application_id }}" class="btn btn-delete"
+                       onclick="return confirm('Delete this application?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
